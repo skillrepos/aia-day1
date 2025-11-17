@@ -1,6 +1,6 @@
-# AI for App Development
+# Enterprise AI Accelerator - Day 0
 
-## Building AI Apps that leverage agents, MCP, and RAG ##
+## AI Concepts and Readiness ##
 
 These instructions will guide you through configuring a GitHub Codespaces environment that you can use to do the labs. 
 
@@ -8,7 +8,7 @@ These instructions will guide you through configuring a GitHub Codespaces enviro
 
 **1. Click on the button below to start a new codespace from this repository.**
 
-Click here ➡️  [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/skillrepos/ai-apps?quickstart=1)
+Click here ➡️  [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/skillrepos/aia-day0?quickstart=1)
 
 <br><br>
 
@@ -48,7 +48,7 @@ To do this, when logged in to GitHub, go to https://github.com/settings/codespac
 
 ## License and Use
 
-These materials are provided as part of the **AI for App Development Workshop** conducted by **TechUpSkills (Brent Laster)**.
+These materials are provided as part of the **Enterprise AI Accelerator Workshop** conducted by **TechUpSkills (Brent Laster)**.
 
 Use of this repository is permitted **only for registered workshop participants** for their own personal learning and
 practice. Redistribution, republication, or reuse of any part of these materials for teaching, commercial, or derivative
