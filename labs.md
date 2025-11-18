@@ -1,7 +1,7 @@
 # Enterprise AI Accelerator - Day 0
 ## AI Concepts and Readiness
 ## Session labs 
-## Revision 1.0 - 11/17/25
+## Revision 1.1 - 11/17/25
 ## (c) 2025 Tech Skills Transformations
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
@@ -12,6 +12,8 @@
   ```
   ollama serve &
   ```
+
+<br><br>
 
 # Lab 1 - AI vs ML vs Generative AI vs Data Science: Understanding the Differences Through Practice**
 
@@ -265,11 +267,11 @@ Review what you've learned:
 
 | Discipline | Primary Question | Approach | Color in Lab |
 |------------|-----------------|----------|--------------|
-| **Data Science** | "What happened and why?" | Statistics, analysis, visualization | 🔵 Blue |
-| **Traditional AI** | "Apply logical rules" | Human-coded if-then logic | 🟣 Magenta |
-| **Machine Learning** | "What will happen?" | Learn patterns from data | 🟢 Green |
-| **Deep Learning** | "Understand complex patterns" | Neural networks, multi-layer learning | 🔷 Cyan |
-| **Generative AI** | "Create something new" | Generate novel content | 🟡 Yellow |
+| **Data Science** | "What happened and why?" | Statistics, analysis, visualization | 
+| **Traditional AI** | "Apply logical rules" | Human-coded if-then logic | 
+| **Machine Learning** | "What will happen?" | Learn patterns from data | 
+| **Deep Learning** | "Understand complex patterns" | Neural networks, multi-layer learning | 
+| **Generative AI** | "Create something new" | Generate novel content |
 
 ### The Hierarchy:
 ```
@@ -306,7 +308,7 @@ Data Science - Separate but overlapping discipline
 - The boundaries are **fluid** - a data scientist might use ML, ML engineers use data science techniques
 - **Generative AI** (like ChatGPT, Llama) is the newest evolution, but not always the best tool
 
----
+<br><br>
 
 ## Bonus: Test Your Understanding
 
@@ -335,6 +337,11 @@ Try these challenges (switch colors as you go!):
 5. Deep Learning (image recognition with neural networks) 
 
 
+
+<p align="center">
+<b>[END OF LAB]</b>
+</p>
+</br></br>
 
 
 # Lab #2 - Prompt Engineering: Advanced Techniques for Product Review Analysis**
@@ -523,6 +530,12 @@ Apply these techniques to other tasks:
 
 
 
+<p align="center">
+<b>[END OF LAB]</b>
+</p>
+</br></br>
+
+
 # Lab #3 - Interacting with AI Models**
 
 **Purpose: Learn how to use different approaches to interact with AI models.**
@@ -617,16 +630,13 @@ python simple_ollama.py
 
 
 <p align="center">
-**[END OF LAB]**
+<b>[END OF LAB]</b>
 </p>
 </br></br>
 
 
 
-<p align="center">
-**[END OF LAB]**
-</p>
-</br></br>
+
 
 <p align="center">
 <b>For educational use only by the attendees of our workshops.</b>
