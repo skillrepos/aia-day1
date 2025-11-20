@@ -1,706 +1,175 @@
-# Enterprise AI Accelerator - Day 0
-## AI Concepts and Readiness
+# Enterprise AI Accelerator
+## Day 1 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 1.1 - 11/17/25
-## (c) 2025 Tech Skills Transformations
+## Revision 5.6 - 07/12/25
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
-**NOTES**
-- To copy and paste in the codespace, you may need to use keyboard commands - CTRL-C and CTRL-V. Chrome may work best for this.
-- If your codespace has to be restarted, run these commands again!
-  ```
-  ollama serve &
-  ```
+**NOTE: To copy and paste in the codespace, you may need to use keyboard commands - CTRL-C and CTRL-V. Chrome may work best for this.**
 
-<br><br>
+**Lab 1 - Working with Neural Networks**
 
-# Lab 1 - AI vs ML vs Generative AI vs Data Science: Understanding the Differences Through Practice
+**Purpose: In this lab, we’ll learn more about neural networks by seeing how one is coded and trained.**
 
-**Purpose: Learn the key differences between Data Science, Artificial Intelligence (AI), Machine Learning (ML), Deep Learning (DL), and Generative AI by seeing how each discipline approaches the same business problem. This hands-on lab uses practical examples and a local language model to demonstrate when and why you'd use each approach.
-
-<br><br>
-
-## The Scenario: E-Commerce Customer Analysis
-
-You work for an online store and have this customer data:
-
+1. In our repository, we have a set of Python programs to help us illustrate and work with concepts in the labs. These are mostly in the *genai* subdirectory. Go to the *TERMINAL* tab in the bottom part of your codespace and change into that directory.
 ```
-Customer Purchase History (Last 6 Months):
-- Customer A: 5 purchases, avg $45, categories: electronics, books
-- Customer B: 2 purchases, avg $120, categories: clothing, accessories
-- Customer C: 12 purchases, avg $25, categories: books, home goods
-- Customer D: 1 purchase, $200, category: electronics
-- Customer E: 8 purchases, avg $35, categories: books, toys
-
-Recent behavior: Customer C browsed "kitchen gadgets" 3 times this week
+cd genai
 ```
 
-We'll explore how **Data Science**, **Traditional AI**, **Machine Learning**, **Deep Learning**, and **Generative AI** each approach this data differently.
+2. For this lab, we have a simple neural net coded in Python. The file name is nn.py. Open the file either by clicking on [**genai/nn.py**](./genai/nn.py) or by entering the command below in the codespace's terminal.
 
-<br><br>
-
-## 1. Data Science Approach - "What Happened?"
-
-**Data Science** focuses on extracting insights from data using statistics, visualization, and analysis. It answers: **"What happened and why?"**
-
-**Set color to Blue for Data Science:**
-```bash
-ds-color
+```
+code nn.py
 ```
 
-Ask the model to perform a data science analysis:
+3. Scroll down to around line 55. Notice the *training_inputs* data and the *training_outputs* data. Each row of the *training_outputs* is what we want the model to predict for the corresponding input row. As coded, the output for the sample inputs ends up being the same as the first element of the array.  For inputs [0,0,1] we are trying to train the model to predict [0]. For the inputs [1,0,1], we are trying to train the model to predict [1], etc. The table below may help to explain.
 
-```bash
-ollama run llama3.2:3b "You are a data scientist analyzing e-commerce data.
+| **Dataset** | **Values** | **Desired Prediction** |
+| :---------: | :--------: | :--------------------: |
+| **1** |  0  0  1  |            0           |
+| **2** |  1  1  1  |            1           |
+| **3** |  1  0  1  |            1           |
+| **4** |  0  1  1  |            0           |
 
-Dataset:
-- Customer A: 5 purchases, avg \$45, categories: electronics, books
-- Customer B: 2 purchases, avg \$120, categories: clothing, accessories
-- Customer C: 12 purchases, avg \$25, categories: books, home goods
-- Customer D: 1 purchase, \$200, category: electronics
-- Customer E: 8 purchases, avg \$35, categories: books, toys
+4. When we run the program, it will train the neural net to try and predict the outputs corresponding to the inputs. You will see the random training weights to start and then the adjusted weights to make the model predict the output. You will then be prompted to put in your own training data. We'll look at that in the next step. For now, go ahead and run the program (command below) but don't put in any inputs yet. Just notice how the weights have been adjusted after the training process.
 
-Perform descriptive statistical analysis:
-1. Calculate: Average purchase frequency, average order value, most popular category
-2. Identify: Customer segments (high/medium/low engagement)
-3. Find: Patterns and correlations
-
-Provide statistical summary in under 100 words."
 ```
-
-**Observe:** Data Science focuses on **descriptive and diagnostic analytics** - understanding what the data tells us about past behavior. 
-
-**Key Concept:** Data Science uses statistical methods, data cleaning, visualization, and analysis to extract insights from existing data.
-
-<br><br>
-
-## 2. Traditional AI Approach - "Apply Logic Rules"
-
-**Traditional AI** (also called symbolic AI or rule-based AI) uses human-defined rules and logic. It answers: **"What should we do based on predefined rules?"
-
-**Set color to Magenta for Traditional AI:**
-```bash
-ai-color
+python nn.py
 ```
+![Starting run of simple nn](./images/gaidd30.png?raw=true "Starting run of simple nn") 
 
-Ask the model to create rule-based logic:
+5. What you should see is that the weights after training are now set in a way that makes it more likely that the result will match the expected output value. (The higher positive value for the first weight means that the model has looked at the training data and realized it should "weigh" the first input higher in its prediction.) To prove this out, you can enter your own input set - just use 1's and 0's for each input. 
 
-```bash
-ollama run llama3.2:3b "You are designing a traditional rule-based AI system for customer classification.
+![Inputs to simple nn](./images/gaidd31.png?raw=true "Inputs to simple nn") 
 
-Create explicit IF-THEN rules to categorize customers:
+6. After you put in your inputs, the neural net will process your input and because of the training, it should predict a result that is close to the first input value you entered (the one for *Input one*).
 
-Rules format:
-IF [condition] THEN [action/classification]
+![Prediction close to first input](./images/gaidd32.png?raw=true "Prediction close to first input") 
 
-Consider:
-- Purchase frequency (high: 8+, medium: 3-7, low: 1-2)
-- Average order value (high: \$100+, medium: \$30-99, low: <\$30)
-- Category preferences
+7. Now, let's see what happens if we change the expected outputs to be different. In the editor for the genai_nn.py file, find the line for the *training_outputs*. Modify the values in the array to be ([[0],[1],[0],[1]]). These are the values of the second element in each of the training data entries. After you're done, save your changes as shown below, or use the keyboard shortcut.
 
-Create 5 specific rules for customer classification and recommended actions. Be precise and deterministic."
+![Modifying expected outputs](./images/gaidd33.png?raw=true "Modifying expected outputs")
+![Saving changes](./images/gaidd9.png?raw=true "Saving changes")
+
+8. Now, run the neural net again. This time when the weights after training are shown, you should see a bias for a higher weight for the second item.
 ```
-
-**Observe:** Traditional AI uses **explicit, human-coded rules**. It's deterministic, transparent, but inflexible. 
-
-**Key Concept:** Traditional AI relies on human experts to define all the rules. Good for well-defined problems with clear logic.
-
-<br><br>
-
-## 3. Machine Learning Approach - "What Will Happen?"
-
-**Machine Learning** learns patterns from data automatically and makes predictions. It answers: **"What is likely to happen next?"
-
-**Set color to Green for Machine Learning:**
-```bash
-ml-color
+python nn.py
 ```
+![Second run of simple nn](./images/gaidd34.png?raw=true "Second run of simple nn") 
 
-Ask the model to explain ML prediction:
+9. At the input prompts, just input any sequence of 0's and 1's as before.
 
-```bash
-ollama run llama3.2:3b "You are explaining how a machine learning model would approach customer prediction.
+10. When the trained model then processes your inputs, you should see that it predicts a value that is close to 0 or 1 depending on what your second input was.
 
-Training data: Customer A-E purchase history
+![Second output of simple nn](./images/gaidd35.png?raw=true "Second output of simple nn")
 
-Explain in simple terms:
-1. What patterns would an ML model learn from this data? (e.g., purchase frequency → category preferences)
-2. Given: Customer C browsed 'kitchen gadgets' 3 times this week
-   What would the ML model predict? (probability of purchase, recommended products)
-3. How is this different from rule-based AI?
-
-Keep explanation under 100 words, focus on 'learning from patterns' vs 'following rules'."
-```
-
-**Observe:** ML **automatically discovers patterns** in data without explicit programming. 
-
-**Key Concept:** ML uses algorithms to learn from historical data and make predictions. It adapts as more data becomes available.
-
-<br><br>
-
-## 4: Deep Learning Approach - "Understand Complex Patterns"
-
-**Deep Learning** is a subset of ML using neural networks with many layers. It excels at finding complex patterns in unstructured data. It answers: **"Can you understand this complex, unstructured information?"
-
-**Set color to Cyan for Deep Learning:**
-```bash
-dl-color
-```
-
-Ask the model to explain deep learning capabilities:
-
-```bash
-ollama run llama3.2:3b "You are explaining deep learning in the context of e-commerce.
-
-Traditional ML: Works well with structured data (tables, numbers)
-Deep Learning: Excels with unstructured data (images, text, behavior sequences)
-
-For our customer data scenario:
-1. What could a deep learning model do that traditional ML cannot?
-   (Hint: analyzing product images, understanding review sentiment, sequential behavior patterns)
-2. Give 2 specific examples using neural networks
-3. Explain why it needs more data and computing power
-
-Keep under 100 words. Focus on 'complex patterns in unstructured data'."
-```
-
-**Observe:** Deep Learning uses **neural networks** to automatically learn hierarchical representations. 
-
-**Key Concept:** Deep Learning is ML with neural networks that have multiple layers. It's what powers modern image recognition, natural language processing, and enables Generative AI.
-
-<br><br>
-
-## 5. Generative AI Approach - "Create Something New"
-
-**Generative AI** creates new, original content based on patterns learned from training data. It answers: **"Can you generate something new and creative?"**
-
-**Set color to Yellow for Generative AI:**
-```bash
-gen-color
-```
-
-Now use the actual Generative AI model to CREATE content:
-
-```bash
-ollama run llama3.2:3b "You are a generative AI creating personalized marketing content.
-
-Customer Profile: Customer C
-- 12 purchases in 6 months (highly engaged)
-- Avg \$25 per order (budget-conscious)
-- Categories: books, home goods
-- Recent behavior: Browsed 'kitchen gadgets' 3 times
-
-Generate:
-1. A personalized email subject line (creative, engaging)
-2. A 2-sentence email body recommending kitchen gadgets
-3. A product bundle name that combines their interests
-
-Be creative and personalized. This is NEW content, not analysis."
-```
-
-**Observe:** Generative AI **creates original content** - text, images, code, etc. 
-
-**Key Concept:** Generative AI produces novel content rather than analyzing or predicting. It's built on deep learning architectures. It's what you're using right now in this lab!
-
-<br><br>
-
-## 6. Understanding the Hierarchy
-
-Let's clarify how these concepts relate:
-
-**Reset to white for neutral explanations:**
-```bash
-white
-```
-
-```bash
-ollama run llama3.2:3b "Explain the relationship between AI, Machine Learning, Deep Learning, and Generative AI in a hierarchy.
-
-Use this format:
-- Artificial Intelligence (AI) is: [definition]
-  - Machine Learning (ML) is: [subset definition]
-    - Deep Learning (DL) is: [subset definition]
-      - Generative AI is: [subset definition]
-
-Where does Data Science fit? [separate or overlapping?]
-
-Use a simple analogy (like Russian nesting dolls or tools in a toolbox). Keep under 100 words."
-```
-
-**Observe:**
-- **AI** is the broadest concept (any system exhibiting intelligent behavior)
-- **ML** is a subset of AI (systems that learn from data)
-- **Deep Learning** is a subset of ML (using neural networks with multiple layers)
-- **Generative AI** is a subset of Deep Learning (systems that create new content)
-- **Data Science** is a separate discipline that overlaps with all of them
-
-<br><br>
-
-## 7. Compare and Decide - When to Use What?
-
-Let's see practical guidance on choosing the right approach:
-
-```bash
-ollama run llama3.2:3b "For each scenario, identify whether Data Science, Traditional AI, Machine Learning, Deep Learning, or Generative AI is the BEST fit:
-
-Scenario 1: Understanding why sales dropped last quarter
-Scenario 2: Automatically flagging fraudulent transactions in real-time
-Scenario 3: Writing personalized product descriptions for 10,000 items
-Scenario 4: Sorting emails into folders based on fixed company policies
-Scenario 5: Predicting which customers will cancel their subscription
-Scenario 6: Analyzing customer selfies to recommend clothing sizes
-
-Format:
-Scenario X: [Answer] - [One sentence why]
-
-Be specific about which approach and explain the reasoning."
-```
-
-**Observe:** Each discipline excels at different types of problems. The key is matching the tool to the task.
-
-<br><br>
-
-
-<br><br>
-
-## Bonus: Test Your Understanding
-
-Try these challenges:
-
-1. **Your task**: Identify duplicate customer records in a database
-   - **Which approach?** (Hint: Think about rules vs learning)
-
-2. **Your task**: Create 100 unique social media posts about your product
-   - **Which approach?** (Hint: What creates new content?)
-
-3. **Your task**: Figure out which marketing campaign worked best last month
-   - **Which approach?** (Hint: What analyzes historical data?)
-
-4. **Your task**: Predict customer lifetime value for the next year
-   - **Which approach?** (Hint: What predicts future outcomes?)
-
-5. **Your task**: Analyze product images to automatically detect defects in manufacturing
-   - **Which approach?** (Hint: What handles unstructured visual data?)
-
-### Answers:
-1. Traditional AI (rule-based matching) or ML (fuzzy matching) 
-2. Generative AI (content creation)
-3. Data Science (historical analysis) 
-4. Machine Learning (predictive modeling) 
-5. Deep Learning (image recognition with neural networks) 
-
-
-
+11. (Optional) If you get done early and want more to do, feel free to try other combinations of training inputs and training outputs.
+    
 <p align="center">
-<b>[END OF LAB]</b>
+**[END OF LAB]**
 </p>
 </br></br>
 
+**Lab 2 - Experimenting with Tokenizations**
 
-# Lab #2 - Prompt Engineering: Advanced Techniques for Product Review Analysis
+**Purpose: In this lab, we'll see how different models do tokenization.**
 
-**Purpose: Learn how different prompting strategies dramatically affect model accuracy and consistency by analyzing product reviews. This lab demonstrates key prompt engineering techniques including role-based prompting, chain-of-thought reasoning, structured templates, and meta-prompting for real-world sentiment analysis.
+1. In the same *genai* directory, we have a simple program that can load a model and print out tokens generated by it. The file name is *tokenizer.py*. You can view the file either by clicking on [**genai/tokenizer.py**](./genai/tokenizer.py) or by entering the command below in the codespace's terminal (assuming you're still in the *genai* directory).
 
-<br><br>
-
-## Test Review (Used Throughout Lab)
-
-We'll analyze this product review with mixed sentiment:
 ```
-"I bought this wireless mouse three weeks ago and I'm really disappointed.
-The battery life is terrible - it dies after just 2 days even though they
-claim 6 months. However, I will say the ergonomic design is comfortable
-and the price was reasonable at $25. The Bluetooth connectivity drops
-frequently which makes it unusable for gaming. I'm considering returning it."
+code tokenizer.py
 ```
+2. This program can be run and passed a model to use for tokenization. To start, we'll be using a model named *bert-base-uncased*. Let's look at this model on huggingface.co.  Go to https://huggingface.co/models and in the *Models* search area, type in *bert-base-uncased*. Select the entry for *google-bert/bert-base-uncased*.
 
-<br><br>
+![Finding bert model on huggingface](./images/gaidd12.png?raw=true "Finding bert model on huggingface")
 
-## 1: Basic Natural Language Prompting
+3. Once you click on the selection, you'll be on the *model card* tab for the model. Take a look at the model card for the model and then click on the *Files and Versions* and *Community* tabs to look at those pages.
 
-Run a simple, unstructured prompt:
+![huggingface tabs](./images/gaidd13.png?raw=true "huggingface tabs")
 
-```bash
-ollama run llama3.2:3b "Analyze the sentiment of this product review: 'I bought this wireless mouse three weeks ago and I'm really disappointed. The battery life is terrible - it dies after just 2 days even though they claim 6 months. However, I will say the ergonomic design is comfortable and the price was reasonable at \$25. The Bluetooth connectivity drops frequently which makes it unusable for gaming. I'm considering returning it.'"
+4. Now let's switch back to the codespace and, in the terminal, run the *tokenizer* program with the *bert-base-uncased* model. Enter the command below. This will download some of the files you saw on the *Files* tab for the model in HuggingFace.
 ```
+python tokenizer.py bert-base-uncased
+```
+5. After the program starts, you will be at a prompt to *Enter text*. Enter in some text like the following to see how it will be tokenized.
+```
+This is sample text for tokenization and text for embeddings.
+```
+![input for tokenization](./images/gaidd36.png?raw=true "input for tokenization")
 
-**Observe:** Vague instructions lead to inconsistent, verbose responses without clear structure.
+6. After you enter this, you'll see the various subword tokens that were extracted from the text you entered. And you'll also see the ids for the tokens stored in the model that matched the subwords.
 
-<br><br>
+![tokenization output](./images/gaidd37.png?raw=true "tokenization output")
 
-## 2: Role-Based Prompting with Domain Expertise
-
-Add expert role and context:
-
-```bash
-ollama run llama3.2:3b "You are a senior e-commerce analyst with 10 years of experience analyzing customer feedback for product improvement and quality assurance. Your specialty is identifying actionable insights from reviews.
-
-Analyze this product review and provide sentiment classification with key insights:
-
-Review: 'I bought this wireless mouse three weeks ago and I'm really disappointed. The battery life is terrible - it dies after just 2 days even though they claim 6 months. However, I will say the ergonomic design is comfortable and the price was reasonable at \$25. The Bluetooth connectivity drops frequently which makes it unusable for gaming. I'm considering returning it.'
-
-Provide: Overall sentiment, critical issues, and purchase recommendation."
+7. (Optional) If you finish early, you can repeat steps 4 - 6 for other tokenizers like the following. (You can use the same text string or different ones. Notice how the text is broken down depending on the model and also the meta-characters.)
+```
+python tokenizer.py roberta-base
+python tokenizer.py gpt2
+python tokenizer.py xlnet-large-cased
 ```
 
-**Observe:** Role assignment improves domain-appropriate analysis and professional tone.
-
-<br><br>
-
-## 3: Few-Shot with Chain-of-Thought Reasoning
-
-Provide examples that show explicit reasoning steps:
-
-```bash
-ollama run llama3.2:3b "Analyze product reviews by thinking through each aspect step-by-step.
-
-Example 1:
-Review: 'Amazing headphones! Crystal clear sound and super comfortable for long sessions.'
-Reasoning: Customer uses strong positive language ('amazing', 'crystal clear', 'super comfortable'). No negatives mentioned. Clear satisfaction.
-Sentiment: POSITIVE
-
-Example 2:
-Review: 'The design is sleek but it broke after one week. Waste of money.'
-Reasoning: One minor positive (design) but major negative (broke quickly, waste of money). Dissatisfaction dominates.
-Sentiment: NEGATIVE
-
-Example 3:
-Review: 'Good value for the price. Not the best quality but does the job.'
-Reasoning: Balanced view - acknowledges limitations but satisfied with price-performance ratio.
-Sentiment: MIXED
-
-Now analyze:
-Review: 'I bought this wireless mouse three weeks ago and I'm really disappointed. The battery life is terrible - it dies after just 2 days even though they claim 6 months. However, I will say the ergonomic design is comfortable and the price was reasonable at \$25. The Bluetooth connectivity drops frequently which makes it unusable for gaming. I'm considering returning it.'
-
-Reasoning:"
-```
-
-**Observe:** Explicit reasoning improves accuracy and helps identify nuanced sentiments.
-
-<br><br>
-
-## 4: Structured Template + Constraint-Based Prompting
-
-Use a systematic framework with explicit constraints for consistent, compliant output:
-
-```bash
-ollama run llama3.2:3b "Use this structured template with constraints to analyze the product review:
-
-[CONTEXT]
-System: Product Review Sentiment Analyzer
-Categories: POSITIVE | NEGATIVE | MIXED
-Task: Systematic sentiment analysis with strict compliance
-
-[CONSTRAINTS]
-- MUST use exactly ONE sentiment: POSITIVE, NEGATIVE, or MIXED
-- MUST identify at least 2 positive and 2 negative aspects (or state 'none found')
-- Final recommendation must be: BUY, AVOID, or CONSIDER
-- Keep analysis under 50 words total
-
-[INPUT]
-Product Review: 'I bought this wireless mouse three weeks ago and I'm really disappointed. The battery life is terrible - it dies after just 2 days even though they claim 6 months. However, I will say the ergonomic design is comfortable and the price was reasonable at \$25. The Bluetooth connectivity drops frequently which makes it unusable for gaming. I'm considering returning it.'
-
-[ANALYSIS FRAMEWORK]
-1. Positive Aspects: <list findings>
-2. Negative Aspects: <list findings>
-3. Overall Sentiment: <POSITIVE|NEGATIVE|MIXED>
-4. Recommendation: <BUY|AVOID|CONSIDER>
-
-[OUTPUT]
-Provide structured analysis following the framework above."
-```
-
-**Observe:** Combining structured frameworks with explicit constraints ensures systematic analysis AND compliance with requirements.
-
-<br><br>
-
-## 5: Zero-Shot Chain-of-Thought (Magic Phrase)
-
-Trigger reasoning without providing examples:
-
-```bash
-ollama run llama3.2:3b "Analyze the sentiment of this product review:
-
-'I bought this wireless mouse three weeks ago and I'm really disappointed. The battery life is terrible - it dies after just 2 days even though they claim 6 months. However, I will say the ergonomic design is comfortable and the price was reasonable at \$25. The Bluetooth connectivity drops frequently which makes it unusable for gaming. I'm considering returning it.'
-
-Let's think step by step to determine the correct sentiment classification."
-```
-
-**Observe:** The phrase "Let's think step by step" triggers analytical reasoning without examples.
-
-<br><br>
-
-## 6: Compare Results and Key Takeaways
-
-Review outputs from all five techniques:
-
-| Technique | Purpose | Best For | Key Benefit |
-|-----------|---------|----------|-------------|
-| **Basic Natural Language** | Baseline | Quick exploration | Simple, fast |
-| **Role-Based** | Domain expertise | Professional contexts | Authority, expertise |
-| **Few-Shot + CoT** | Pattern learning + reasoning | Complex decisions | Accuracy through examples |
-| **Structured + Constraints** | Systematic + compliant | Production systems | Consistency + compliance |
-| **Zero-Shot CoT** | Reasoning without examples | General problems | No examples needed |
-
-<br><br>
-
-## Key Learnings
-
-1. **Role-based prompting** adds domain expertise and professional context
-2. **Chain-of-thought** (explicit reasoning) dramatically improves accuracy - works both with examples (few-shot) and without (zero-shot)
-3. **Structured templates + constraints** ensure systematic analysis AND enforce business requirements
-4. **"Let's think step by step"** is a powerful zero-shot reasoning trigger that works without examples
-5. **Choose techniques based on use case**: Speed vs. accuracy vs. compliance needs
-
-<br><br>
-
-## Bonus Challenges (Optional)
-
-Apply these techniques to other tasks:
-
-1. **Entity Extraction**: Use structured templates to extract named entities (people, places, organizations) from news articles
-2. **Code Review**: Apply role-based + constraint-based prompting for systematic code quality analysis
-3. **Email Triage**: Combine few-shot + self-consistency for classifying support tickets by urgency
-4. **Content Moderation**: Use chain-of-thought reasoning to explain moderation decisions
-
----
-
-## Quick Reference: When to Use Each Technique
-
-- **Just starting?** → Basic Natural Language (Step 1)
-- **Need professional output?** → Role-Based (Step 2)
-- **Need consistency with examples?** → Few-Shot + Chain-of-Thought (Step 3)
-- **Production systems with compliance?** → Structured Templates + Constraints (Step 4)
-- **No examples available?** → Zero-Shot CoT with "Let's think step by step" (Step 5)
-
-<br><br>
-
-## Additional Resources
-
-- [Ollama Documentation](https://github.com/ollama/ollama)
-- [Prompt Engineering Guide](https://www.promptingguide.ai/)
-- [Chain-of-Thought Paper](https://arxiv.org/abs/2201.11903)
-- Try different models: `ollama list` and `ollama pull <model-name>`
-
-
-
+   
 <p align="center">
-<b>[END OF LAB]</b>
+**[END OF LAB]**
 </p>
 </br></br>
 
+**Lab 3 - Understanding embeddings, vectors and similarity measures**
 
-# Lab #3 - Interacting with AI Models**
+**Purpose: In this lab, we'll see how tokens get mapped to vectors and how vectors can be compared.**
 
-**Purpose: Learn how to use different approaches to interact with AI models.**
-
-<br><br>
-
-## 1. The Ollama app is already installed as part of the codespace setup. To see the different options Ollama makes available for working with models, you can run the first second command below in the *TERMINAL*. 
-
+1. In the repository, we have a Python program that uses a Tokenizer and Model to create embeddings for three terms that you input. It then computes and displays the cosine similarity between each combination. Open the file to look at it by clicking on [**genai/vectors.py**](./genai/vectors.py) or by using the command below in the terminal.
 ```
-ollama
+code vectors.py
 ```
-
-<br><br>
-
-## 2. We can also look at what models are available currently for us to use with the command below. 
-
+2. Let's run the program. As we did for the tokenizer example, we'll pass in a model to use. We'll also pass in a second argument which is the number of dimensions from the vector for each term to show. Run the program with the command below. You can wait to enter terms until the next step.
 ```
-ollama list
+python vectors.py bert-base-cased 5
 ```
+![vectors program run](./images/gaidd38.png?raw=true "vectors program run")
 
-## 3. You'll see that it has the llama3.2:3b model available. Let's find out more about this model. Go to https://ollama.com and in the *Search models* box at the top, enter *llama*. In the list that pops up, choose the entry for "llama3.2".
+3. The command we just ran loads up the bert-base-cased model and tells it to show the first 5 dimensions of each vector for the terms we enter. The program will be prompting you for three terms. Enter each one in turn. You can try two closely related words and one that is not closely related. For example
+   - king
+   - queen
+   - duck
 
-![searching for llama](./images/31ai7.png?raw=true "searching for llama")
+![vectors program inputs](./images/gaidd39.png?raw=true "vectors program inputs")
 
-<br><br>
+4. Once you enter the terms, you'll see the first 5 dimensions for each term. And then you'll see the cosine similarity displayed between each possible pair. This is how similar each pair of words is. The two that are most similar should have a higher cosine similarity "score".
 
-## 4. This will put you on the specific page about that model. Scroll down and scan the various information available about this model.
-![reading about llama3.2](./images/31ai8.png?raw=true "reading about llama3.2")
+![vectors program outputs](./images/gaidd40.png?raw=true "vectors program outputs")
 
-<br><br>
-
-## 5. Let's run the model in interactive mode with the command below. This will load it and make it available to query/prompt. 
-
+5. Each vector in the bert-based models have 768 dimensions. Let's run the program again and tell it to display 768 dimensions for each of the three terms.  Also, you can try another set of terms that are more closely related, like *multiplication*, *division*, *addition*.
 ```
-ollama run llama3.2
+python vectors.py bert-base-cased 768
 ```
+6. You should see that the cosine similarities for all pair combinations are not as far apart this time.
+![vectors program second outputs](./images/gaidd19.png?raw=true "vectors program second outputs")
 
-<br><br>
+7. As part of the output from the program, you'll also see the *token id* for each term. (It is above the print of the dimensions. If you don't want to scroll through all the dimensions, you can just run it again with a small number of dimensions like we did in step 2.) If you're using the same model as you did in lab 2 for tokenization, the ids will be the same. 
 
-## 6. Now you can query the model by inputting text at the *>>>Send a message (/? for help)* prompt.  Let's ask it about what the weather is in Paris. What you'll see is it telling you that it doesn't have access to current weather data and suggesting some ways to gather it yourself.
+![token id](./images/gaidd20.png?raw=true "token id")
 
-```
-What's the current weather in Paris?
-```
+**Steps 8 & 9 are optional if you finish early or want to do later**
 
-![answer to weather prompt and response](./images/31ai10.png?raw=true "answer to weather prompt and response")
+8. You can actually see where these mappings are stored if you look at the model on Hugging Face. For instance, for the *bert-base-cased* model, you can go to https://huggingface.co and search for bert-base-cased. Select the entry for google-bert/bert-base-cased.
 
-<br><br>
+![finding model](./images/gaidd21.png?raw=true "finding model")
 
-## 7. Now, let's try a call with the API. You can stop the current run with a Ctrl-D or switch to another terminal. Then put in the command below (or whatever simple prompt you want). 
+9. On the page for the model, click on the *Files and versions* tab. Then find the file *tokenizer.json* and click on it. The file will be too large to display, so click on the *check the raw version* link to see the actual content.
 
-```
-curl http://localhost:11434/api/generate -d '{
-  "model": "llama3.2",
-  "prompt": "What causes weather changes?",
-  "stream": false
-}' | jq -r '.response'
-```
+![selecting tokenizer.json](./images/gaidd22.png?raw=true "selecting tokenizer.json")
+![opening file](./images/gaidd23.png?raw=true "opening file")
 
-<br><br>
+9. You can search for the terms you entered previously with a Ctrl-F or Cmd-F and find the mapping between the term and the id. If you look for "##" you'll see mappings for parts of tokens like you may have seen in lab 2.
 
-## 8. This will take a minute or so to run. You should see a long text response . You can try out some other prompts/queries if you want.
-
-![query response](./images/aiapps37.png?raw=true "Query response")
-
-<br><br>
-
-## 9. Now let's try a simple Python script that uses Ollama programmatically. We have a basic example script called `simple_ollama.py`. Take a look at it either via [**simple_ollama.py**](./simple_ollama.py) or via the command below.
-
-```
-code simple_ollama.py
-```
-
-You should see a simple script that:
-- Imports the ChatOllama class from langchain_ollama
-- Initializes the Ollama client with the llama3.2 model
-- Takes user input
-- Sends it to Ollama
-- Displays the response
-
-<br><br>
-
-## 10. Now you can run the script with the command below. 
-
-```
-python simple_ollama.py
-```
-
-<br><br>
-
-## 11. When prompted, enter a question like "What is the capital of France?" and press Enter. You should see the model's response printed to the terminal. This demonstrates how easy it is to integrate Ollama into a Python application. Feel free to try other prompts. 
+![finding terms in file](./images/gaidd24.png?raw=true "finding terms in files")
 
 
 <p align="center">
-<b>[END OF LAB]</b>
+**[END OF LAB]**
 </p>
 </br></br>
-
-
-# Lab #4 - Creating Your Own Intelligence Briefing
-
-**Purpose: Use AI to help keep you up-to-date on AI.**
-
-<br><br>
-
-## Extended Prompt
-
-```
-"Please provide me with a structured AI intelligence briefing covering the last 7-14 days. Format your response as an executive briefing with the following sections:
-1. CRITICAL DEVELOPMENTS (What I Must Know)
-
-Major AI model releases or significant updates
-Regulatory changes or policy announcements
-Security/safety incidents or concerns
-Industry game-changers or disruptions
-
-2. TECHNICAL ADVANCES (What's New)
-
-New capabilities or benchmarks achieved
-Research breakthroughs (summarize in 1-2 sentences each)
-Open source releases worth noting
-Performance improvements in existing tools
-
-3. BUSINESS IMPACT (What Matters for Work)
-
-New enterprise AI tools or features
-Case studies of successful AI implementations
-ROI data or efficiency metrics published
-Vendor announcements (Microsoft, Google, AWS, etc.)
-
-4. PRACTICAL APPLICATIONS (What I Can Use Now)
-
-New tools I can try immediately (with links)
-Prompt engineering techniques or tips discovered
-Workflow improvements or automations
-Cost-effective AI solutions released
-
-5. INDUSTRY MOVEMENTS (Market Dynamics)
-
-Major funding rounds or acquisitions
-Partnership announcements
-Competitive landscape shifts
-Job market or skill demand changes
-
-6. LOOKING AHEAD (What's Coming)
-
-Upcoming releases or announcements to watch
-Scheduled conferences or events
-Predicted trends gaining momentum
-Emerging concerns or opportunities
-
-For each item, please:
-
-Include the DATE it was announced/published
-Provide a direct LINK to the source
-Keep descriptions to 2-3 sentences max
-Bold the most important items I shouldn't miss
-Flag anything requiring immediate action with 🚨
-
-End with a 'THREE THINGS TO DO THIS WEEK' section with specific, actionable recommendations based on the updates.
-Focus on practical, business-relevant developments over purely academic research. Prioritize information from the last 14 days, and clearly mark anything older as 'BACKGROUND' if it's essential context."
-
-```
-
-<br><br>
-
-## 1: Try out the simple one-line prompt
-
-Open claude.ai, chatgpt.com, gemini.google.com or your preferred AI assistant and copy and paste the simplified prompt below (substituting in your role and industry in the appropriate places):
-
-```
-What are the 5 most important AI developments from the last week that a [YOUR ROLE] in [YOUR INDUSTRY] needs to know, with links to learn more?
-```
-<br><br>
-
-## 2: Review the output and note what is useful/not useful.
-
-<br><br>
-
-## 3: Try out the extended prompt.
-
-Copy and paste the extended prompt from the start of the lab into the AI assistant. 
-
-<br><br>
-
-## 4: Review the output and notice differences and details vs the simpler prompt. 
-
-<br><br>
-
-## 5: Run the extended prompt again but add the appropriate section (or create your own) for your role.
-
-For Technical Practitioners
-```
-Include code examples, GitHub repos, and technical implementation details. Focus on tools I can integrate into development workflows.
-```
-
-For Business Leaders
-```
-Emphasize ROI metrics, competitive advantages, and strategic implications. Include cost comparisons and vendor assessments.
-```
-For Specific Industries
-```
-Filter for developments specifically relevant to [YOUR INDUSTRY: healthcare/finance/retail/etc.]. Include industry-specific use cases and compliance considerations.
-```
-
-## 6: Review the output with the additional details.
-
-<br><br>
-
-## 7: What would you change/add/delete to make the results better for you? Try out any changes you want to make to fine-tune and make this most useful.
-
 
 <p align="center">
 <b>[END OF LAB]</b>
