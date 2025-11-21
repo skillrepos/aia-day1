@@ -3,12 +3,9 @@ Product Review Sentiment Analysis Fine-Tuning Demo (Optimized)
 ===============================================================
 This script demonstrates fine-tuning a DistilBERT model for business product review analysis.
 
-Dataset: Amazon Product Reviews Polarity
-- Real customer product reviews labeled as positive (1) or negative (0)
-- Full dataset: 3.6M+ training examples, 400k test examples
-- Demo uses: 1,000 train and 200 test for speed
 
-Model: DistilBERT-base-uncased
+
+
 - 66 million parameters
 - Optimized for classification tasks
 
@@ -39,25 +36,11 @@ print("Business Value: Scale customer feedback analysis from 100s to millions of
 print("Using: 1,000 training examples, 200 test examples (5-minute demo)")
 print("Note: Production systems use millions of examples for 95%+ accuracy\n")
 
-# Load Amazon product reviews dataset - using small subset for speed
-train_dataset = load_dataset('amazon_polarity', split='train[:1000]')
-test_dataset = load_dataset('amazon_polarity', split='test[:200]')
 
 print(f"✓ Training examples loaded: {len(train_dataset):,}")
 print(f"✓ Test examples loaded: {len(test_dataset):,}")
 
 # Show example product reviews with variety
-print("\nSample customer product reviews:")
-sample_indices = [0, 100, 200]  # Get diverse examples
-for idx, i in enumerate(sample_indices, 1):
-    if i < len(train_dataset):
-        example = train_dataset[i]
-        sentiment = "Positive ⭐⭐⭐⭐⭐" if example['label'] == 1 else "Negative ⭐"
-        # Show title and truncated content
-        review_text = example['content'][:150] if len(example['content']) > 150 else example['content']
-        print(f"\n{idx}. Product: \"{example['title']}\"")
-        print(f"   Review: \"{review_text}...\"")
-        print(f"   Customer Sentiment: {sentiment}")
 
 # ============================================================================
 # STEP 2: Load Pre-trained Model
@@ -71,9 +54,6 @@ print("- Pre-trained on general English text (books, Wikipedia)")
 print("- Has NOT seen product reviews yet")
 print("- Will learn review-specific patterns through fine-tuning\n")
 
-model_name = 'distilbert-base-uncased'
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 
 print(f"✓ Model loaded: {model.num_parameters():,} parameters")
 print("✓ Classification head: 2 outputs (negative, positive)")
@@ -91,17 +71,12 @@ print("Processing reviews with max length of 128 tokens for speed...\n")
 
 def preprocess_function(examples):
     """Convert customer reviews to tokens (numbers) that the model can process."""
-    # Combine title and content for full context
-    texts = [f"{title} {content}" for title, content in zip(examples['title'], examples['content'])]
-    return tokenizer(texts, truncation=True, padding='max_length', max_length=128)
 
 # Tokenize with progress indication
 print("Tokenizing training reviews...")
-tokenized_train = train_dataset.map(preprocess_function, batched=True)
 print("✓ Training reviews tokenized")
 
 print("Tokenizing test reviews...")
-tokenized_test = test_dataset.map(preprocess_function, batched=True)
 print("✓ Test reviews tokenized")
 
 # Set format for PyTorch
@@ -143,12 +118,6 @@ for batch_idx, batch in enumerate(test_dataloader):
     inputs = {'input_ids': batch['input_ids'], 'attention_mask': batch['attention_mask']}
     labels = batch['label']
     
-    with torch.no_grad():
-        outputs = model(**inputs)
-    
-    predictions = torch.argmax(outputs.logits, dim=-1)
-    correct_before += (predictions == labels).sum().item()
-    total_before += labels.size(0)
     
     # Collect first batch for detailed display
     if batch_idx == 0:
@@ -161,7 +130,6 @@ for batch_idx, batch in enumerate(test_dataloader):
                 'correct': predictions[i].item() == labels[i].item()
             })
 
-pre_fine_tune_accuracy = correct_before / total_before
 
 # Show detailed example predictions
 print("\n📊 Sample predictions from UNTRAINED model:")
@@ -198,21 +166,9 @@ print(f"\nTraining on {len(train_dataset)} customer reviews...")
 print("Watch the loss decrease as the model learns! 📉\n")
 
 training_args = TrainingArguments(
-    output_dir='./results',
-    num_train_epochs=1,
-    per_device_train_batch_size=32,  # Larger batch for speed
-    logging_steps=5,  # More frequent updates for demo
-    logging_dir='./logs',
-    eval_strategy='no',
-    save_strategy='no',
-    disable_tqdm=False,  # Show progress bar
-    report_to='none',  # Disable wandb/tensorboard for speed
 )
 
 trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=tokenized_train,
 )
 
 print("🚀 Training started... (watch the loss decrease!)")
@@ -244,12 +200,6 @@ for batch_idx, batch in enumerate(test_dataloader):
     inputs = {'input_ids': batch['input_ids'], 'attention_mask': batch['attention_mask']}
     labels = batch['label']
     
-    with torch.no_grad():
-        outputs = model(**inputs)
-    
-    predictions = torch.argmax(outputs.logits, dim=-1)
-    correct_after += (predictions == labels).sum().item()
-    total_after += labels.size(0)
     
     # Collect first batch for display
     if batch_idx == 0:
@@ -262,7 +212,6 @@ for batch_idx, batch in enumerate(test_dataloader):
                 'correct': predictions[i].item() == labels[i].item()
             })
 
-post_fine_tune_accuracy = correct_after / total_after
 
 # Show detailed example predictions
 print("\n📊 Sample predictions from FINE-TUNED model:")
@@ -343,5 +292,5 @@ APPLICATIONS BEYOND PRODUCT REVIEWS:
 """)
 
 print("="*80)
-print("DONE!")
+print("DONE!"
 print("="*80)
