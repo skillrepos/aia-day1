@@ -321,7 +321,7 @@ python sentiment.py
 11. If you're done early, feel free to change the texts, the candidate_labels in the previous model, etc. and rerun the models to see the results.
 
 <p align="center">
-**[END OF LAB]**
+<b>[END OF LAB]</b>
 </p>
 </br></br>
 
@@ -400,7 +400,7 @@ python reviews-ft.py
 
 <br>
 <p align="center">
-**[END OF LAB]**
+<b>[END OF LAB]</b>
 </p>
 </br></br>
 
@@ -408,69 +408,91 @@ python reviews-ft.py
 
 **Purpose: In this lab, we’ll learn about how to use vector databases for storing supporting data and doing similarity searches.**
 
-1. For this lab and the next one, we have a data file that we'll be using that contains a list of office information and details for a ficticious company. The file is in [**data/offices.pdf**](./data/offices.pdf). You can use the link to open it and take a look at it.
+1. For this lab and the following ones, we'll be using files in the *rag* subdirectory. Change to that directory.
+
+```
+cd rag
+```
+
+<br><br>
+
+2. We have several data files that we'll be using that are for a ficticious company. The files are located in the *rag/knowledge_base_pdfs* directory. [knowledge base pdfs](./rag/knowledge_base_pdfs) You can browse them via the explorer view. Here's a [direct link](./rag/knowledge_base_pdfs/OmniTech_Returns_Policy_2024.pdf) to an example one if you want to open it and take a look at it.
 
 ![PDF data file](./images/31ai23.png?raw=true "PDF data file") 
 
-2. In our repository, we have some simple tools built around a popular vector database called Chroma. There are two files which will create a vector db (index) for the *.py files in our repo and another to do the same for the office pdf. You can look at the files either via the usual "code <filename>" method or clicking on [**tools/index_code.py**](./tools/index_code.py) or [**tools/index_pdf.py**](./tools/index_pdf.py).
+<br><br>
+
+3. In our repository, we have some simple tools built around a popular vector database called Chroma. There are two files which will create a vector db (index) for the *.py files in our repo and another to do the same for the pdfs in our knowledge base. You can look at the files either via the usual "code <filename>" method or clicking on [**tools/index_code.py**](./tools/index_code.py) or [**tools/index_pdfs.py**](./tools/index_pdfs.py).
 
 ```
 code ../tools/index_code.py
-code ../tools/index_pdf.py
+code ../tools/index_pdfs.py
 ```
 
-3. Let's create a vector database of our local python files. Run the program to index those. **This may run for a while before you see things happening.** You'll see the program loading the embedding model that will turn the code chunks into numeric represenations in the vector database and then it will read and index our *.py files. It will create a new local vector database in *./chroma_db*.
+<br><br>
+
+4. Let's create a vector database of our local code files (python and bash). Run the program to index those. **This may run for a while before you see things happening.** You'll see the program loading the embedding model that will turn the code chunks into numeric represenations in the vector database and then it will read and index our *.py files. It will create a new local vector database in *./chroma_code_db*.
 
 ```
 python ../tools/index_code.py
 ```
 
-![Running code indexer](./images/gaidd88.png?raw=true "Running code indexer")
+![Running code indexer](./images/aia-1-35.png?raw=true "Running code indexer")
 
-4. To help us do easy/simple searches against our vector databases, we have another tool at [**tools/search.py**](./tools/search.py). This tool connects to the ChromaDB vector database we create, and, using cosine similarity metrics, finds the top "hits" (matching chunks) and prints them out. You can open it and look at the code in the usual way if you want. No changes are needed to the code.
+![Running code indexer](./images/aia-1-36.png?raw=true "Running code indexer")
+
+<br><br>
+
+5. To help us do easy/simple searches against our vector databases, we have another tool at [**tools/search.py**](./tools/search.py). This tool connects to the ChromaDB vector database we create, and, using cosine similarity metrics, finds the top "hits" (matching chunks) and prints them out. You can open it and look at the code in the usual way if you want. No changes are needed to the code.
 
 ```
 code ../tools/search.py
 ```
 
-5. Now, let's run the search tool against the vector database we built in step 3. You can prompt it with phrases related to our coding like any of the ones shown below. When done, just type "exit".  Notice the top hits and their respective cosine similarity values. Are they close? Farther apart?
+This tool takes a *--target* argument when you run it with a value of either "code" or "pdfs" to indicate which vector database to search.
+You can also pass search queries directly on the command line with the *--query* argument. Or you can just start it and type in the queries, hit return, and get results. To exit in that mode, type "exit".
+
+<br><br>
+
+6. Now, let's run the search tool against the vector database we built in step 4. You can run it with phrases related to our coding like any of the ones shown below. You can run the commands with separate invocations of the tool as shown here, or just run it and enter them in interactive mode.  Notice the top hits and their respective cosine similarity values. Are they close? Farther apart?
 
 ```
-python ../tools/search.py
-
-convert celsius to farenheit
-embed model sentence-transformers
+  python ../tools/search.py --query "convert text to vectors" --target code
+  python ../tools/search.py --query "tokenize sentences" --target code
+  python ../tools/search.py --query "convert text to numbers" --target code
 ```
 
-![Running search](./images/gaidd89.png?raw=true "Running search")
+![Running search](./images/aia-1-37.png?raw=true "Running search")
 
-6.  Now, let's recreate our vector database based off of the PDF file. Just run the indexer for the pdf file.
+<br><br>
 
-```
-python ../tools/index_pdf.py
-```
-
-![Indexing PDF](./images/gaidd90.png?raw=true "Indexing PDF")
-
-7. Now, we can run the same search tool to find the top hits for information about offices. Below are some prompts you can try here. Note that in some of them, we're using keywords only found in the PDF document. Notice the cosine similarity values on each - are they close? Farther apart?  When done, just type "exit".
+7.  Now, let's create a vector database based off of the PDF files. Just run the indexer for the pdf file.
 
 ```
-python ../tools/search.py
-
-Queries:
-Corporate Operations office
-Seaside cities
-Tech Development sites
-High revenue branch
+python ../tools/index_pdfs.py
 ```
 
-![PDF search](./images/gaidd95.png?raw=true "PDF search")
+![Indexing PDFs](./images/aia-1-38.png?raw=true "Indexing PDFs")
 
-8. Keep in mind that this is not trying to intelligently answer your prompts at this point. This is a simple semantic search to find related chunks. In lab 8, we'll add in the LLM to give us better responses. In preparation for that lab, make sure that indexing for the PDF is the last one you ran and not the indexing for the Python files.
+<br><br>
 
+8. Now, we can run the same search tool to find the top hits for information about the company policies. Below are some prompts you can try here. Notice the cosine similarity values on each - are they close? Farther apart?  When done, just type "exit".
 
+```
+  python ../tools/search.py --query "track my shipment" --target pdfs
+  python ../tools/search.py --query "forgot my login credentials" --target pdfs
+  python ../tools/search.py --query "exchange damaged item" --target pdfs
+```
+
+![PDF search](./images/aia-1-40.png?raw=true "PDF search")
+
+<br><br>
+
+8. Keep in mind that this is not trying to intelligently answer your prompts at this point. This is a simple semantic search to find related chunks. In lab 7, we'll add in the LLM to give us better responses. 
+
+<br>
 <p align="center">
-**[END OF LAB]**
+<b>[END OF LAB]</b>
 </p>
 </br></br>
 
