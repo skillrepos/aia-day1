@@ -242,48 +242,81 @@ python vectors.py bert-base-cased 768
 
 **Purpose: In this lab, we’ll see how to interact with various models for different standard tasks**
 
-1. In our repository, we have several different Python programs that utilize transformer models for standard types of LLM tasks. One of them is a simple translation example. The file name is *translation.py*. Open the file either by clicking on [**llm/translation.py**](./llm/translation.py) or by entering the command below in the codespace's terminal.
+1. In our repository, we have several different Python programs that utilize transformer models for standard types of LLM tasks. These programs have some random facts from different categories stored in them to use for transformer models to act on.
+
+<br><br>
+
+2. One of the programs is a simple translation example. The file name is *translation.py*. Open the file either by clicking on [**llm/translation.py**](./llm/translation.py) or by entering the command below in the codespace's terminal. 
 
 ```
 code translation.py
 ```
-2. Take a look at the file contents.  Notice that we are pulling in a specific model ending with 'en-fr'. This is a clue that this model is trained for English to French translation. Let's find out more about it. In a browser, go to *https://huggingface.co/models* and search for the model name 'Helsinki-NLP/opus-mt-en-fr' (or you can just go to huggingface.co/Helsinki-NLP/opus-mt-en-fr).
-![model search](./images/gaidd26.png?raw=true "model search")
+<br><br>
+
+3. Take a look at the file contents.  Notice that we are pulling in a specific model ending with 'en-fr'. This is a clue that this model is trained for English to French translation. Let's find out more about it. In a browser, go to *https://huggingface.co/models* and search for the model name 'Helsinki-NLP/opus-mt-en-fr' (or you can just go to huggingface.co/Helsinki-NLP/opus-mt-en-fr).
+
+![model search](./images/aia-1-23.png?raw=true "model search")
+
+<br><br>
 
 3. You can look around on the model card for more info about the model. Notice that it has links to an *OPUS readme* and also links to download its original weights, translation test sets, etc.
 
+<br><br>
+
 4. When done looking around, go back to the repository and look at the rest of the *translation.py* file. What we are doing is loading the model, the tokenizer, and then taking a set of random texts and running them through the tokenizer and model to do the translation. Go ahead and execute the code in the terminal via the command below.
+
 ```
 python translation.py
 ```
-![translation by model](./images/gaidd41.png?raw=true "translation by model")
+
+![translation by model](./images/aia-1-24.png?raw=true "translation by model")
  
-5. There's also an example program for doing classification. The file name is classification.py. Open the file either by clicking on [**genai/classification.py**](./genai/classification.py) or by entering the command below in the codespace's terminal.
+<br><br>
+
+5. There's also an example program for doing classification. The file name is classification.py. Open the file either by clicking on [**llm/classification.py**](./llm/classification.py) or by entering the command below in the codespace's terminal.
+
 
 ```
 code classification.py
 ```
+
+<br><br>
+
 6. Take a look at the model for this one *joeddav/xlm-roberta-large-xnli* on huggingface.co and read about it. When done, come back to the repo.
 
+<br><br>
+
 7. *classification.py* uses a HuggingFace pipeline to do the main work. Notice it also includes a list of categories as *candidate_labels* that it will use to try and classify the data. Go ahead and run it to see it in action. (This will take awhile to download the model.) After it runs, you will see each topic, followed by the ratings for each category. The scores reflect how well the model thinks the topic fits a category. The highest score reflects which category the model thinks fit best.
+
 ```
 python classification.py
 ```
-![classification by model](./images/gaidd42.png?raw=true "classification by model")
 
-8. Finally, we have a program to do sentiment analysis. The file name is sentiment.py. Open the file either by clicking on [**genai/sentiment.py**](./genai/sentiment.py) or by entering the command below in the codespace's terminal.
+![classification by model](./images/aia-1-25.png?raw=true "classification by model")
+
+<br><br>
+
+8. Finally, we have a program to do sentiment analysis. The file name is sentiment.py. Open the file either by clicking on [**llm/sentiment.py**](./llm/sentiment.py) or by entering the command below in the codespace's terminal.
 
 ```
 code sentiment.py
 ```
 
+<br><br>
+
 9. Again, you can look at the model used by this one *distilbert-base-uncased-finetuned-sst-2-english* in Hugging Face.
 
+<br><br>
+
 10. When ready, go ahead and run this one in the similar way and observe which ones it classified as positive and which as negative and the relative scores.
+
 ```
 python sentiment.py
 ```
-![sentiment by model](./images/gaidd43.png?raw=true "sentiment by model")
+
+![sentiment by model](./images/aia-1-26.png?raw=true "sentiment by model")
+
+<br><br>
 
 11. If you're done early, feel free to change the texts, the candidate_labels in the previous model, etc. and rerun the models to see the results.
 
